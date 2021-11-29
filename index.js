@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 
+// los request los interpreta como integer
 app.use(express.json())
 
 
@@ -52,16 +53,27 @@ app.get('/api/persons/:id', (req, res) => {
 
 
 /////////////////////////////////////////////////
+app.post('/api/persons', (req, res) => {
+    const id = Math.floor(Math.random() * 10000) + 5
+
+    const newPerson = req.body;
+    newPerson.id = id
+    console.log(newPerson)
+
+    res.json(newPerson).status(200);
+
+
+})
+
+
+/////////////////////////////////////////////////
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     // para borrar copia todo menos el que llega por id
     const newPersons = persons.filter(person => person.id !== id)
-  
     res.status(204).end()
+})
 
-
-  })
-  
 
 
 /////////////////////////////////////////////////
