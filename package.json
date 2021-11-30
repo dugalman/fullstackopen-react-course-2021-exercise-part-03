@@ -11,7 +11,9 @@
     "author": "Damian Mac Dougall",
     "license": "MIT",
     "dependencies": {
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "morgan": "^1.10.0",
+        "rotating-file-stream": "^3.0.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.15"

@@ -1,5 +1,17 @@
 const express = require('express')
+const morgan = require('morgan')
+const fs = require('fs')
+
 const app = express()
+
+// create a write stream (in append mode)
+///////////////////////////////////////////////////////////////////////////////
+// setup the logger
+
+const morgaLine = ':method :url :status - :res[content-length] - :response-time ms :body ';
+morgan.token('body', function (req, res) {return JSON.stringify(req.body);});
+app.use(morgan(morgaLine, {stream: fs.createWriteStream('./access.log', {flags: 'a'})}));
+app.use(morgan(morgaLine));
 
 // los request los interpreta como integer
 app.use(express.json())
