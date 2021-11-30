@@ -6,6 +6,7 @@ const cors = require('cors')
 
 const app = express()
 app.use(cors())
+app.use(express.static('build'))
 
 
 // create a write stream (in append mode)
@@ -14,7 +15,7 @@ app.use(cors())
 
 const morgaLine = ':method :url :status - :res[content-length] - :response-time ms :body ';
 morgan.token('body', function (req, res) {return JSON.stringify(req.body);});
-app.use(morgan(morgaLine, {stream: fs.createWriteStream('./access.log', {flags: 'a'})}));
+app.use(morgan(morgaLine, {stream: fs.createWriteStream('./log/access.log', {flags: 'a'})}));
 app.use(morgan(morgaLine));
 
 // los request los interpreta como integer
