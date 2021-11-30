@@ -1,8 +1,12 @@
 const express = require('express')
 const morgan = require('morgan')
 const fs = require('fs')
+const cors = require('cors')
+
 
 const app = express()
+app.use(cors())
+
 
 // create a write stream (in append mode)
 ///////////////////////////////////////////////////////////////////////////////
