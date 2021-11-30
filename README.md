@@ -7,6 +7,7 @@ Se utiliza el repositorio de github [fullstackopen-react-course-2021-exercise-pa
 PAra probar en internet se va a utilizar heroku
 
 # Crear un un app
+```sh
 $ heroku login
 
 $ heroku create
@@ -14,4 +15,6 @@ $ heroku create
 $ git push heroku main
 
 $ heroku ps:scale web=1
+
 $ heroku open
+```
