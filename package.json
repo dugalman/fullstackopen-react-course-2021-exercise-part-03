@@ -10,7 +10,8 @@
         "build:ui": "rm -rf build && cd ~/Documentos/Customers/CLIENTE_DUGALMAN/fullstackopen.com/fullstack/part2/final && npm run build --prod && cp -r build ~/Documentos/Customers/CLIENTE_DUGALMAN/fullstackopen.com/fullstackopen-react-course-2021-exercise-part-03",
         "deploy": "git push heroku main",
         "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",    
-        "logs:prod": "heroku logs --tail"
+        "logs:prod": "heroku logs --tail",
+        "open:prod": "heroku ps:scale web=1 && heroku open"
     },
     "author": "Damian Mac Dougall",
     "license": "MIT",
