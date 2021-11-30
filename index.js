@@ -6,8 +6,8 @@ const cors = require('cors')
 
 const app = express()
 app.use(cors())
+app.use(express.static('build'))
 
-// create a write stream (in append mode)
 ///////////////////////////////////////////////////////////////////////////////
 // setup the logger
 
@@ -86,16 +86,12 @@ app.post('/api/persons', (req, res) => {
 
     const id = Math.floor(Math.random() * 10000) + 5
     newPerson.id = id
-    console.log(newPerson)
-
-
+    // console.log(newPerson)
 
     persons.push(newPerson)
-    console.log(persons);
+    // console.log(persons);
 
     res.json(newPerson).status(200);
-
-
 })
 
 
