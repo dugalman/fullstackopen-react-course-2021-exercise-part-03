@@ -66,20 +66,17 @@ app.post('/api/persons', (req, res) => {
         return res.status(404).json({ error: `The 'name' field must be not empty` })
     }
 
-    if (persons.find(p => p.name === newPerson.name)) {
-        return res
-            .status(404)
-            .json({ error: `name must be unique` })
-    }
+    const query = Person.find({ name: newPerson.name });
+    query.count((err, count) => {
+        if (err || count > 0) {
+            return res.status(404).json({ error: `name must be unique` })
+        }else{
+            const out = Person.create(newPerson);
+            res.json(out).status(200);
+        }
+    })
 
-    const id = Math.floor(Math.random() * 10000) + 5
-    newPerson.id = id
-    // console.log(newPerson)
-
-    persons.push(newPerson)
-    // console.log(persons);
-
-    res.json(newPerson).status(200);
+    
 })
 
 
