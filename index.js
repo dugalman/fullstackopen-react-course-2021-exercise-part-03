@@ -1,3 +1,6 @@
+require('dotenv').config();
+const Person = require('./models/person')
+
 const express = require('express')
 const morgan = require('morgan')
 // const fs = require('fs')
@@ -12,7 +15,7 @@ app.use(express.static('build'))
 // setup the logger
 
 const morgaLine = ':method :url :status - :res[content-length] - :response-time ms :body ';
-morgan.token('body', function (req, res) {return JSON.stringify(req.body);});
+morgan.token('body', function (req, res) { return JSON.stringify(req.body); });
 // app.use(morgan(morgaLine, {stream: fs.createWriteStream('./log/access.log', {flags: 'a'})}));
 app.use(morgan(morgaLine));
 
@@ -20,50 +23,21 @@ app.use(morgan(morgaLine));
 app.use(express.json())
 
 
-let persons = [
-    {
-        id: 1,
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5323523"
-    },
-    {
-        id: 3,
-        name: "Dam Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: 4,
-        name: "Mary Poppendick",
-        number: "39-23-6423122"
-    },
-    {
-        id: 5,
-        name: "Damian Mac Dougall",
-        number: "555-123456"
-    },
-]
-
 /////////////////////////////////////////////////
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 
 /////////////////////////////////////////////////
 app.get('/api/persons/:id', (req, res) => {
+    const target = { id: req.params.id };
+    console.log('target', target);
 
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) {
-        return res.json(person)
-    }
-
-    res.status(404).end()
+    Person.findById(req.params.id).then(persons => {
+        res.json(persons)
+    })
 })
 
 
