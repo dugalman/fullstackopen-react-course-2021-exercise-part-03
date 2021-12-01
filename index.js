@@ -22,6 +22,23 @@ app.use(morgan(morgaLine));
 // los request los interpreta como integer
 app.use(express.json())
 
+/////////////////////////////////////////////////
+app.get('/api/info', (req, res) => {
+
+    var query = Person.find();
+
+    query.count((err, count) => {
+        if (err) {
+            return res.status(404).json({ error: `Something is wrong`, code: err })
+        }
+        else {
+            const requestTime = new Date()
+            const template = `<p>Phonebook has info for ${count} people</p><p>${requestTime}</p>`
+            res.set('Content-Type', 'text/html');
+            res.send(Buffer.from(template));
+        }
+    });
+})
 
 /////////////////////////////////////////////////
 app.get('/api/persons', (req, res) => {
@@ -76,20 +93,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
 
 
-/////////////////////////////////////////////////
-app.get('/api/info', (req, res) => {
-    const countPerson = persons.length
-    const requestTime = new Date()
 
-    // console.log(JSON.stringify(req.headers));
-
-    let template = `<p>Phonebook has info for ${countPerson} people</p>
-    <p>${requestTime}</p>
-    `
-    res.set('Content-Type', 'text/html');
-    res.send(Buffer.from(template));
-
-})
 
 
 //////////////////MAIN//////////////////
