@@ -51,17 +51,17 @@ app.get('/api/persons', (req, res) => {
 })
 
 /////////////////////////////////////////////////
-app.get('/api/persons/:id', (req, res,next) => {
+app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
         .then(person => {
             (person)
-                ?res.json(person)
-                :res.json({code:'Not Found'}).status(404).end() 
+                ? res.json(person)
+                : res.json({ code: 'Not Found' }).status(404).end()
         })
-    .catch(error => {
-        console.log("WAT IS THIS",error)
-        next(error)
-      })
+        .catch(error => {
+            console.log("WAT IS THIS", error)
+            next(error)
+        })
 
 })
 
@@ -77,16 +77,24 @@ app.post('/api/persons', (req, res) => {
         return res.status(404).json({ error: `The 'name' field must be not empty` })
     }
 
-    const query = Person.find({ name: newPerson.name });
-    query.count((err, count) => {
-        if (err || count > 0) {
-            return res.status(404).json({ error: `name must be unique` })
-        } else {
-            const out = Person.create(newPerson);
-            res.json(out).status(200);
-        }
-    })
+    // const query = Person.find({ name: newPerson.name });
+    // query.count((err, count) => {
+    //     if (err || count > 0) {
+    //         return res.status(404).json({ error: `name must be unique` })
+    //     } else {
+    //         const out = Person.create(newPerson);
+    //         res.json(out).status(200);
+    //     }
+    // })
+
+    const out = Person.create(newPerson)
+        .then(a => res.json(out).status(200))
+        .catch(e => res.status(404).json({ error: e }))
+        ;
+
 })
+
+
 
 /////////////////////////////////////////////////
 app.put('/api/persons', (req, res) => {
@@ -100,20 +108,20 @@ app.put('/api/persons', (req, res) => {
     }
 
     const query = { name: newPerson.name };
-    Person.findOneAndUpdate( 
+    Person.findOneAndUpdate(
         query,
-        { $set:{ name: newPerson.name, number: newPerson.number }},
-        (err,docs) => { 
-            if (err)  { 
-                console.log(err) 
-                return res.status(404).json({ error: `Error updating Docs`, err })            
+        { $set: { name: newPerson.name, number: newPerson.number } },
+        (err, docs) => {
+            if (err) {
+                console.log(err)
+                return res.status(404).json({ error: `Error updating Docs`, err })
             }
-            else { 
+            else {
                 console.log("Updated Docs : ", newPerson);
                 return res.json(newPerson).status(200);
-            } 
+            }
         }
-        );
+    );
     // query.count((err, count) => {
     //     if (count === 1) {
     //         const out = Person.updateOne( { name: newPerson.name }, {number:number }   )
