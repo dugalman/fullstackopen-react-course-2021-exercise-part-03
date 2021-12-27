@@ -67,32 +67,45 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 
 /////////////////////////////////////////////////
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
 
-    const newPerson = req.body;
+    const body = req.body;
 
-    if (!newPerson.name) { return res.status(404).json({ error: `The 'name' field is required` }) }
+    const person = new Person({
+        name: body.name,
+        number: body.number || false
+    })
 
-    if (newPerson.name.trim().length === 0) {
-        return res.status(404).json({ error: `The 'name' field must be not empty` })
-    }
-
-    // const query = Person.find({ name: newPerson.name });
-    // query.count((err, count) => {
-    //     if (err || count > 0) {
-    //         return res.status(404).json({ error: `name must be unique` })
-    //     } else {
-    //         const out = Person.create(newPerson);
-    //         res.json(out).status(200);
-    //     }
-    // })
-
-    const out = Person.create(newPerson)
-        .then(a => res.json(out).status(200))
-        .catch(e => res.status(404).json({ error: e }))
-        ;
+    person
+        .save()
+        .then(savedPerson => savedPerson.toJSON())
+        .then(data => res.json(data))
+        .catch(e => next(e))
 
 })
+
+/////////////////////////////////////////////////
+// app.post('/api/persons', (req, res) => {
+
+//     const newPerson = req.body;
+
+//     if (!newPerson.name) { return res.status(404).json({ error: `The 'name' field is required` }) }
+
+//     if (newPerson.name.trim().length === 0) {
+//         return res.status(404).json({ error: `The 'name' field must be not empty` })
+//     }
+
+//     const query = Person.find({ name: newPerson.name });
+//     query.count((err, count) => {
+//         if (err || count > 0) {
+//             return res.status(404).json({ error: `name must be unique` })
+//         } else {
+//             const out = Person.create(newPerson);
+//             res.json(out).status(200);
+//         }
+//     })
+
+// })
 
 
 
@@ -155,7 +168,10 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
     }
+
     next(error)
 }
 app.use(errorHandler)
