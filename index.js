@@ -110,38 +110,23 @@ app.post('/api/persons', (req, res, next) => {
 
 
 /////////////////////////////////////////////////
-app.put('/api/persons', (req, res) => {
+app.put('/api/persons', (req, res, next) => {
 
     const newPerson = req.body;
 
-    if (!newPerson.name) { return res.status(404).json({ error: `The 'name' field is required` }) }
-
-    if (newPerson.name.trim().length === 0) {
-        return res.status(404).json({ error: `The 'name' field must be not empty` })
-    }
-
     const query = { name: newPerson.name };
-    Person.findOneAndUpdate(
-        query,
-        { $set: { name: newPerson.name, number: newPerson.number } },
-        (err, docs) => {
-            if (err) {
-                console.log(err)
-                return res.status(404).json({ error: `Error updating Docs`, err })
-            }
-            else {
-                console.log("Updated Docs : ", newPerson);
-                return res.json(newPerson).status(200);
-            }
-        }
-    );
-    // query.count((err, count) => {
-    //     if (count === 1) {
-    //         const out = Person.updateOne( { name: newPerson.name }, {number:number }   )
-    //         res.json(out).status(200);
-    //     } else {
-    //         return res.status(404).json({ error: `Not Found name`, err })            
-    //     }
+    updateData = { $set: { name: newPerson.name, number: newPerson.number } }
+
+    const opts = { runValidators: true };
+
+    Person
+        .findOneAndUpdate(query, updateData, opts)
+        .then(result => {
+            res.status(200).json(result).end()
+        })
+        .catch(
+            error => next(error)
+        )
 })
 
 
