@@ -24,11 +24,6 @@ $ heroku open
 - https://masteringjs.io/tutorials/mongoose/find-by-id
 - https://mongoosejs.com/docs/validation.html
 
-
-## Si falla la coneccion a la base ejecutar
-
-heroku config:set MONGODB_URI='mongodb+srv://fullstack:LSlna2pK7RDMUbCe@cluster0.sdlbf.mongodb.net/phonebook-app?retryWrites=true&w=majority'
-
 ## instalar eslint
 - npm install eslint --save-dev
 - node_modules/.bin/eslint --init
