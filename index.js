@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 const Person = require('./models/person')
 
 const express = require('express')
@@ -17,10 +17,10 @@ app.use(express.static('build'))
 ///////////////////////////////////////////////////////////////////////////////
 // setup the logger
 
-const morgaLine = ':method :url :status - :res[content-length] - :response-time ms :body ';
-morgan.token('body', function (req, res) { return JSON.stringify(req.body); });
+const morgaLine = ':method :url :status - :res[content-length] - :response-time ms :body '
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 // app.use(morgan(morgaLine, {stream: fs.createWriteStream('./log/access.log', {flags: 'a'})}));
-app.use(morgan(morgaLine));
+app.use(morgan(morgaLine))
 
 // los request los interpreta como integer
 app.use(express.json())
@@ -28,19 +28,19 @@ app.use(express.json())
 /////////////////////////////////////////////////
 app.get('/api/info', (req, res) => {
 
-    var query = Person.find();
+    var query = Person.find()
 
     query.count((err, count) => {
         if (err) {
-            return res.status(404).json({ error: `Something is wrong`, code: err })
+            return res.status(404).json({ error: 'Something is wrong', code: err })
         }
         else {
             const requestTime = new Date()
             const template = `<p>Phonebook has info for ${count} people</p><p>${requestTime}</p>`
-            res.set('Content-Type', 'text/html');
-            res.send(Buffer.from(template));
+            res.set('Content-Type', 'text/html')
+            res.send(Buffer.from(template))
         }
-    });
+    })
 })
 
 /////////////////////////////////////////////////
@@ -59,7 +59,7 @@ app.get('/api/persons/:id', (req, res, next) => {
                 : res.json({ code: 'Not Found' }).status(404).end()
         })
         .catch(error => {
-            console.log("WAT IS THIS", error)
+            console.log('WAT IS THIS', error)
             next(error)
         })
 
@@ -69,7 +69,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 /////////////////////////////////////////////////
 app.post('/api/persons', (req, res, next) => {
 
-    const body = req.body;
+    const body = req.body
 
     const person = new Person({
         name: body.name,
@@ -112,12 +112,12 @@ app.post('/api/persons', (req, res, next) => {
 /////////////////////////////////////////////////
 app.put('/api/persons', (req, res, next) => {
 
-    const newPerson = req.body;
+    const newPerson = req.body
 
-    const query = { name: newPerson.name };
-    updateData = { $set: { name: newPerson.name, number: newPerson.number } }
+    const query = { name: newPerson.name }
+    const updateData = { $set: { name: newPerson.name, number: newPerson.number } }
 
-    const opts = { runValidators: true };
+    const opts = { runValidators: true }
 
     Person
         .findOneAndUpdate(query, updateData, opts)
@@ -135,7 +135,7 @@ app.put('/api/persons', (req, res, next) => {
 app.delete('/api/persons/:id', (req, res, next) => {
 
     Person.findByIdAndRemove(req.params.id)
-        .then(result => { res.status(204).end() })
+        .then( () => { res.status(204).end() })
         .catch(error => next(error))
 
 })
